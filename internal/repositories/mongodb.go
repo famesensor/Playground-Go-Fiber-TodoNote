@@ -19,8 +19,8 @@ type mongoRepository struct {
 	timeout  time.Duration
 }
 
-func newMongoClient(mongoURL string, mongoTimeout int) (*mongo.Client, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(mongoTimeout)*time.Second)
+func newMongoClient(mongoURL string, mongoTimeout time.Duration) (*mongo.Client, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), mongoTimeout)
 	defer cancel()
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURL))
 	if err != nil {
@@ -33,10 +33,10 @@ func newMongoClient(mongoURL string, mongoTimeout int) (*mongo.Client, error) {
 	return client, nil
 }
 
-func NewMongoRepositotry(mongoURL, mongoDB string, mongoTimeout int) (ports.UserRepository, error) {
+func NewMongoRepositotry(mongoURL, mongoDB string, mongoTimeout time.Duration) (ports.TodoRepository, error) {
 	repo := &mongoRepository{
 		database: mongoDB,
-		timeout:  time.Duration(mongoTimeout) * time.Second,
+		timeout:  mongoTimeout,
 	}
 	client, err := newMongoClient(mongoURL, mongoTimeout)
 	if err != nil {
@@ -54,7 +54,6 @@ func (r *mongoRepository) CreateTodo(todo *domain.Todo) error {
 
 	collection := r.client.Database(r.database).Collection("todos")
 	_, err := collection.InsertOne(ctx, bson.M{
-		"ID":        todo.ID,
 		"Content":   todo.Content,
 		"CreatedAt": todo.CreatedAt,
 	})
