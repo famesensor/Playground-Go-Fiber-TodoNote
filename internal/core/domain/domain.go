@@ -1,6 +1,6 @@
 package domain
 
-type user struct {
-	Name string `json:id`
-	Age  int    `json:id`
+type Todo struct {
+	Content   string `json:content`
+	CreatedAt int    `json:createdAt`
 }
