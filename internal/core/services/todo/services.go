@@ -1,40 +1,42 @@
 package todo
 
 import (
-	"fmt"
-
 	"github.com/famesensor/playground-go-fiber-todonotes/internal/core/domain"
 	"github.com/famesensor/playground-go-fiber-todonotes/internal/core/ports"
 )
 
-type service struct {
+type todoService struct {
 	todoRepository ports.TodoRepository
 }
 
-func New(todoRepository ports.TodoRepository) *service {
-	return &service{
+func New(todoRepository ports.TodoRepository) ports.TodoService {
+	return &todoService{
 		todoRepository,
 	}
 }
 
-func (srv *service) CreateTodo(todo *domain.Todo) error {
-	fmt.Print(todo)
+func (srv *todoService) Create(todo *domain.Todo) error {
+	// fmt.Print(todo)
 
-	err := srv.todoRepository.Create(todo)
-	if err != nil {
-		return err
-	}
+	// err := srv.todoRepository.Create(todo)
+	// if err != nil {
+	// 	return err
+	// }
 
 	return nil
 }
 
-func (srv *service) FindTodoId(id string) (*domain.Todo, error) {
-	fmt.Print(id)
+func (srv *todoService) FindById(id string) (*domain.Todo, error) {
+	// fmt.Print(id)
 
-	res, err := srv.FindTodoId(id)
-	if err != nil {
-		return nil, err
-	}
+	// res, err := srv.(id)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	return res, nil
+	return nil, nil
+}
+
+func (srv *todoService) FindAll() ([]*domain.Todo, error) {
+	return nil, nil
 }
