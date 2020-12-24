@@ -34,19 +34,21 @@ func newMongoClient(mongoURL string, mongoTimeout time.Duration) (*mongo.Client,
 }
 
 func NewMongoRepositotry(mongoURL, mongoDB string, mongoTimeout time.Duration) (ports.TodoRepository, error) {
-	repo := &mongoRepository{
-		database: mongoDB,
-		timeout:  mongoTimeout,
-	}
+
 	client, err := newMongoClient(mongoURL, mongoTimeout)
 	if err != nil {
 		return nil, err
 	}
+	repo := &mongoRepository{
+		database: mongoDB,
+		timeout:  mongoTimeout,
+	}
 	repo.client = client
+
 	return repo, nil
 }
 
-func (r *mongoRepository) CreateTodo(todo *domain.Todo) error {
+func (r *mongoRepository) Create(todo *domain.Todo) error {
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 
@@ -75,4 +77,8 @@ func (r *mongoRepository) FindById(id string) (*domain.Todo, error) {
 		return nil, err
 	}
 	return todo, nil
+}
+
+func (r *mongoRepository) FindAll() ([]*domain.Todo, error) {
+	return nil, nil
 }
