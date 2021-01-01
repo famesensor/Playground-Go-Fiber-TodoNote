@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/famesensor/playground-go-fiber-todonotes/internal/core/domain"
+	model "github.com/famesensor/playground-go-fiber-todonotes/internal/core/domain"
 	"github.com/famesensor/playground-go-fiber-todonotes/internal/core/ports"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -48,7 +48,7 @@ func NewMongoRepositotry(mongoURL, mongoDB string, mongoTimeout time.Duration) (
 	return repo, nil
 }
 
-func (r *mongoRepository) Create(todo *domain.Todo) error {
+func (r *mongoRepository) Create(todo *model.Todo) error {
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 
@@ -65,12 +65,12 @@ func (r *mongoRepository) Create(todo *domain.Todo) error {
 	return nil
 }
 
-func (r *mongoRepository) FindById(id string) (*domain.Todo, error) {
+func (r *mongoRepository) FindById(id string) (*model.Todo, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 
-	todo := &domain.Todo{}
-	collection := r.client.Database(r.database).Collection("users")
+	todo := &model.Todo{}
+	collection := r.client.Database(r.database).Collection("todos")
 	filter := bson.M{"ID": id}
 	err := collection.FindOne(ctx, filter).Decode(&todo)
 	if err != nil {
@@ -79,6 +79,28 @@ func (r *mongoRepository) FindById(id string) (*domain.Todo, error) {
 	return todo, nil
 }
 
-func (r *mongoRepository) FindAll() ([]*domain.Todo, error) {
-	return nil, nil
+func (r *mongoRepository) FindAll() ([]*model.Todo, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
+	defer cancel()
+
+	filter := bson.D{{}}
+	todo := []*model.Todo{}
+	collection := r.client.Database(r.database).Collection("todos")
+	cursor, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	if err := cursor.All(ctx, &todo); err != nil {
+		return nil, err
+	}
+
+	return todo, nil
+}
+
+func (r *mongoRepository) Update(todo *model.Todo) error {
+	return nil
+}
+
+func (r *mongoRepository) Delete(id string) error {
+	return nil
 }
