@@ -1,9 +1,11 @@
 package ports
 
-import "github.com/famesensor/playground-go-fiber-todonotes/internal/core/domain"
+import model "github.com/famesensor/playground-go-fiber-todonotes/internal/core/domain"
 
 type TodoRepository interface {
-	Create(user *domain.Todo) error
-	FindById(id string) (*domain.Todo, error)
-	FindAll() ([]*domain.Todo, error)
+	Create(todo *model.Todo) error
+	FindById(id string) (*model.Todo, error)
+	FindAll() ([]*model.Todo, error)
+	Update(todo *model.Todo) error
+	Delete(id string) error
 }
