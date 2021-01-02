@@ -1,11 +1,15 @@
 package ports
 
-import model "github.com/famesensor/playground-go-fiber-todonotes/internal/core/domain"
+import (
+	"context"
+
+	model "github.com/famesensor/playground-go-fiber-todonotes/internal/core/domain"
+)
 
 type TodoService interface {
-	Create(todo *model.Todo) error
-	FindById(id string) (*model.Todo, error)
-	FindAll() ([]*model.Todo, error)
-	Update(todo *model.Todo) error
-	Delete(id string) error
+	Create(ctx context.Context, todo *model.Todo) error
+	FindById(ctx context.Context, id string) (*model.Todo, error)
+	FindAll(ctx context.Context) ([]*model.Todo, error)
+	Update(ctx context.Context, id string, todo *model.Todo) error
+	Delete(ctx context.Context, id string) error
 }
