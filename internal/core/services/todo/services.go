@@ -1,6 +1,8 @@
 package todo
 
 import (
+	"context"
+
 	model "github.com/famesensor/playground-go-fiber-todonotes/internal/core/domain"
 	"github.com/famesensor/playground-go-fiber-todonotes/internal/core/ports"
 )
@@ -15,7 +17,7 @@ func New(todoRepository ports.TodoRepository) ports.TodoService {
 	}
 }
 
-func (srv *todoService) Create(todo *model.Todo) error {
+func (srv *todoService) Create(ctx context.Context, todo *model.Todo) error {
 	// fmt.Print(todo)
 
 	// err := srv.todoRepository.Create(todo)
@@ -26,7 +28,7 @@ func (srv *todoService) Create(todo *model.Todo) error {
 	return nil
 }
 
-func (srv *todoService) FindById(id string) (*model.Todo, error) {
+func (srv *todoService) FindById(ctx context.Context, id string) (*model.Todo, error) {
 	// fmt.Print(id)
 
 	// res, err := srv.(id)
@@ -37,14 +39,14 @@ func (srv *todoService) FindById(id string) (*model.Todo, error) {
 	return nil, nil
 }
 
-func (srv *todoService) FindAll() ([]*model.Todo, error) {
+func (srv *todoService) FindAll(ctx context.Context) ([]*model.Todo, error) {
 	return nil, nil
 }
 
-func (srv *todoService) Update(todo *model.Todo) error {
+func (srv *todoService) Update(ctx context.Context, id string, todo *model.Todo) error {
 	return nil
 }
 
-func (srv *todoService) Delete(id string) error {
+func (srv *todoService) Delete(ctx context.Context, id string) error {
 	return nil
 }
