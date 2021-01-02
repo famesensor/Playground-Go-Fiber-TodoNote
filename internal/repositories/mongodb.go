@@ -8,6 +8,7 @@ import (
 	model "github.com/famesensor/playground-go-fiber-todonotes/internal/core/domain"
 	"github.com/famesensor/playground-go-fiber-todonotes/internal/core/ports"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -48,25 +49,22 @@ func NewMongoRepositotry(mongoURL, mongoDB string, mongoTimeout time.Duration) (
 	return repo, nil
 }
 
-func (r *mongoRepository) Create(todo *model.Todo) error {
-	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
+func (r *mongoRepository) Create(ctx context.Context, todo *model.Todo) error {
+	ctx, cancel := context.WithTimeout(ctx, r.timeout)
 	defer cancel()
 
 	fmt.Print(todo)
 
 	collection := r.client.Database(r.database).Collection("todos")
-	_, err := collection.InsertOne(ctx, bson.M{
-		"Content":   todo.Content,
-		"CreatedAt": todo.CreatedAt,
-	})
+	_, err := collection.InsertOne(ctx, todo)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *mongoRepository) FindById(id string) (*model.Todo, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
+func (r *mongoRepository) FindById(ctx context.Context, id string) (*model.Todo, error) {
+	ctx, cancel := context.WithTimeout(ctx, r.timeout)
 	defer cancel()
 
 	todo := &model.Todo{}
@@ -79,8 +77,8 @@ func (r *mongoRepository) FindById(id string) (*model.Todo, error) {
 	return todo, nil
 }
 
-func (r *mongoRepository) FindAll() ([]*model.Todo, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
+func (r *mongoRepository) FindAll(ctx context.Context) ([]*model.Todo, error) {
+	ctx, cancel := context.WithTimeout(ctx, r.timeout)
 	defer cancel()
 
 	filter := bson.D{{}}
@@ -97,10 +95,39 @@ func (r *mongoRepository) FindAll() ([]*model.Todo, error) {
 	return todo, nil
 }
 
-func (r *mongoRepository) Update(todo *model.Todo) error {
+func (r *mongoRepository) Update(ctx context.Context, id string, todo *model.Todo) error {
+	ctx, cancel := context.WithTimeout(ctx, r.timeout)
+	defer cancel()
+
+	todoID, _ := primitive.ObjectIDFromHex(id)
+
+	query := bson.D{{Key: "_id", Value: todoID}}
+	update := bson.D{{Key: "$set", Value: bson.D{
+		{Key: "content", Value: todo.Content},
+		{Key: "updatedAt", Value: time.Now()},
+	}}}
+
+	err := r.client.Database(r.database).Collection("todos").FindOneAndUpdate(ctx, query, update).Err()
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (r *mongoRepository) Delete(id string) error {
+func (r *mongoRepository) Delete(ctx context.Context, id string) error {
+	ctx, cancel := context.WithTimeout(ctx, r.timeout)
+	defer cancel()
+
+	todoID, _ := primitive.ObjectIDFromHex(id)
+
+	query := bson.D{{Key: "_id", Value: todoID}}
+	err := r.client.Database(r.database).Collection("todos").FindOneAndDelete(ctx, query).Err()
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
