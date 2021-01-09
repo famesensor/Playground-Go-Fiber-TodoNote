@@ -3,18 +3,11 @@ package main
 import (
 	"log"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/famesensor/playground-go-fiber-todonotes/protocol"
 )
 
 func main() {
-
-	// todoRepository := mongo.NewMongoRepositotry()
-	// todoService := todo.New()
-	// todoHandler := handler.New()
-
-	// fiber inti
-	app := fiber.New()
-
-	// server run
-	log.Fatal(app.Listen(":30000"))
+	if err := protocol.ServerHttp(); err != nil {
+		log.Fatal(err)
+	}
 }
