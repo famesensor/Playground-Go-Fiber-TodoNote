@@ -1,4 +1,4 @@
-package todo
+package services
 
 import (
 	"context"
@@ -11,7 +11,7 @@ type todoService struct {
 	todoRepository ports.TodoRepository
 }
 
-func New(todoRepository ports.TodoRepository) ports.TodoService {
+func NewTodoService(todoRepository ports.TodoRepository) ports.TodoService {
 	return &todoService{
 		todoRepository,
 	}
@@ -29,10 +29,19 @@ func (srv *todoService) FindAll(ctx context.Context) ([]*model.Todo, error) {
 	return srv.todoRepository.FindAll(ctx)
 }
 
-func (srv *todoService) Update(ctx context.Context, id string, todo *model.Todo) error {
-	return nil
+func (srv *todoService) UpdateTodo(ctx context.Context, id string, todo *model.Todo) error {
+	return srv.todoRepository.UpdateTodo(ctx, id, todo)
 }
 
-func (srv *todoService) Delete(ctx context.Context, id string) error {
+func (srv *todoService) UpdateStatus(ctx context.Context, id string) error {
+	todoDoc, err := srv.FindById(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	if todoDoc.Status != "success" {
+		return srv.todoRepository.UpdateStatus(ctx, id)
+	}
+
 	return nil
 }
