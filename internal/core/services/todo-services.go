@@ -3,7 +3,7 @@ package services
 import (
 	"context"
 
-	model "github.com/famesensor/playground-go-fiber-todonotes/internal/core/domain"
+	"github.com/famesensor/playground-go-fiber-todonotes/internal/core/domain"
 	"github.com/famesensor/playground-go-fiber-todonotes/internal/core/ports"
 )
 
@@ -17,19 +17,19 @@ func NewTodoService(todoRepository ports.TodoRepository) ports.TodoService {
 	}
 }
 
-func (srv *todoService) Create(ctx context.Context, todo *model.Todo) error {
+func (srv *todoService) Create(ctx context.Context, todo *domain.Todo) error {
 	return srv.todoRepository.Create(ctx, todo)
 }
 
-func (srv *todoService) FindById(ctx context.Context, id string) (*model.Todo, error) {
+func (srv *todoService) FindById(ctx context.Context, id string) (*domain.Todo, error) {
 	return srv.todoRepository.FindById(ctx, id)
 }
 
-func (srv *todoService) FindAll(ctx context.Context) ([]*model.Todo, error) {
+func (srv *todoService) FindAll(ctx context.Context) ([]*domain.Todo, error) {
 	return srv.todoRepository.FindAll(ctx)
 }
 
-func (srv *todoService) UpdateTodo(ctx context.Context, id string, todo *model.Todo) error {
+func (srv *todoService) UpdateTodo(ctx context.Context, id string, todo *domain.Todo) error {
 	return srv.todoRepository.UpdateTodo(ctx, id, todo)
 }
 
