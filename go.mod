@@ -12,10 +12,11 @@ require (
 	github.com/google/go-cmp v0.5.4 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/klauspost/compress v1.11.6 // indirect
+	github.com/stretchr/testify v1.6.1
 	github.com/swaggo/swag v1.7.0
 	github.com/tidwall/pretty v1.0.2 // indirect
+	github.com/tj/assert v0.0.3
 	github.com/valyala/fasthttp v1.19.0 // indirect
-	github.com/vektra/mockery/v2 v2.6.0 // indirect
 	go.mongodb.org/mongo-driver v1.4.4
 	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad // indirect
 	golang.org/x/net v0.0.0-20201224014010-6772e930b67b // indirect
